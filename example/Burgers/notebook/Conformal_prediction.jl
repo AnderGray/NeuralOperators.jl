@@ -52,3 +52,17 @@ function emirical_coverage(cpmodel :: CP_model, input_test, output_test, n_alpha
     return coverage, 1 .- alphas
 end
 
+function plot_prediction(cpmodel, input, ground_truth, n_alpha = 10)
+
+    alphas = range(0, 1, length=n_alpha+2)[2:end-1]
+    prediction_sets = compute_prediction_sets(cpmodel, input, alphas)
+    
+    colours = colormap("RdBu", n_alpha)
+    p1 = plot()
+    for (i, alpha) in enumerate(alphas)
+        p1 = plot!(input[1, :, 1], inf.(prediction_sets[:,:,i]), fill_between = sup.(prediction_sets[:,:,i]), color = colours[i], label = false)
+    end
+
+    p1 = plot!(input[1, :, 1], ground_truth, label = "ground truth", linewidth= 1, color = "yellow")
+    return p1
+end

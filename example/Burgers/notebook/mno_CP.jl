@@ -18,10 +18,15 @@ output_cal = ground_truth[:,:, 1:n_cal]
 input_test = input_data[:,:, n_cal+1:end]
 output_test = ground_truth[:,:, n_cal+1:end]
 
+###
+#    Make a cp Neural operator model
+###
 my_CP_model = calibrate_modulation_error(m, input_cal, output_cal[1, : ,:])
 
+
+# Plot a random prediction
 i = rand(1:size(input_test)[3])
-prediction_sets = compute_prediction_sets(my_CP_model, view(input_test, :, :, i:i), 0.9);
+prediction_sets = compute_prediction_sets(my_CP_model, view(input_test, :, :, i:i), 0.1);
 
 plot(input_data[1, :, 1], output_test[1, :, i ], label = "ground_truth");
 plot!(input_data[1, :, 1], m(view(input_test, :, :, i:i))[1, :, 1], label = "predict")
@@ -41,22 +46,15 @@ xlabel!("1 - α")
 ylabel!("empirial coverage")
 
 
-i = 1
-plot(input_data[1, :, 1], ground_truth[1, :, i], label = "ground_truth",
-     title = "                                              Burgers equation u(x,T_end)");
-p1 = plot!(input_data[1, :, 1], m(view(input_data, :, :, i:i))[1, :, 1], label = "predict");
+i = rand(1:size(input_test)[3])
+p1 = plot_prediction(my_CP_model, view(input_test, :, :, i:i), output_test[1,:,i])
+i = rand(1:size(input_test)[3])
+p2 = plot_prediction(my_CP_model, view(input_test, :, :, i:i), output_test[1,:,i])
+i = rand(1:size(input_test)[3])
+p3 = plot_prediction(my_CP_model, view(input_test, :, :, i:i), output_test[1,:,i])
+i = rand(1:size(input_test)[3])
+p4 = plot_prediction(my_CP_model, view(input_test, :, :, i:i), output_test[1,:,i])
 
-plot(input_data[1, :, 1], ground_truth[1, :, i + 1], label = "ground_truth");
-p2 = plot!(input_data[1, :, 1], m(view(input_data, :, :, (i + 1):(i + 1)))[1, :, 1],
-           label = "predict");
-i = 3
-
-plot(input_data[1, :, 1], ground_truth[1, :, i], label = "ground_truth");
-p3 = plot!(input_data[1, :, 1], m(view(input_data, :, :, i:i))[1, :, 1], label = "predict");
-
-plot(input_data[1, :, 1], ground_truth[1, :, i + 1], label = "ground_truth");
-p4 = plot!(input_data[1, :, 1], m(view(input_data, :, :, (i + 1):(i + 1)))[1, :, 1],
-           label = "predict");
 p = plot(p1, p2, p3, p4)
 
 
