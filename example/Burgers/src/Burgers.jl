@@ -25,7 +25,7 @@ function register_burgers()
 end
 
 function get_data(; n = 2048, Δsamples = 2^3, grid_size = div(2^13, Δsamples), T = Float32)
-    file = matopen(joinpath(datadep"Burgers", "burgers_data_R10.mat"))
+    file = matopen(joinpath("data", "burgers_data_R10.mat"))
     x_data = T.(collect(read(file, "a")[1:n, 1:Δsamples:end]'))
     y_data = T.(collect(read(file, "u")[1:n, 1:Δsamples:end]'))
     close(file)
